@@ -13,7 +13,7 @@ import { useWebLogicConfig } from './objects/middleware/webLogic';
 import { useNginxConfig } from './objects/middleware/nginx';
 import { useApacheConfig } from './objects/middleware/apache';
 import { useConsulConfig } from './objects/middleware/consul';
-import { useClickHouseConfig } from './objects/middleware/clickHouse';
+import { useClickHouseConfig } from './objects/database/clickHouse';
 import { useTomcatConfig } from './objects/middleware/tomcat';
 import { useMinioBkpullConfig } from './objects/middleware/minio';
 import { useJettyJmxConfig } from './objects/middleware/jetty';
@@ -46,6 +46,13 @@ import { useClusterConfig } from './objects/k8s/cluster';
 import { useNodeConfig } from './objects/k8s/node';
 import { usePodConfig } from './objects/k8s/pod';
 import { useDockerContainerConfig } from './objects/containerManagement/dockerContainer';
+import { useDmConfig } from './objects/database/dm';
+import { useDb2Config } from './objects/database/db2';
+import { useGreenPlumConfig } from './objects/database/greenPlum';
+import { useOpenGaussConfig } from './objects/database/openGauss';
+import { useGBase8aConfig } from './objects/database/gBase8a';
+import { useVastBaseConfig } from './objects/database/vastBase';
+import { useKingBaseConfig } from './objects/database/kingBase';
 
 export const useMonitorConfig = () => {
   const hardwareConfig = useHardwareConfig();
@@ -94,6 +101,13 @@ export const useMonitorConfig = () => {
   const podConfig = usePodConfig();
   const nodeConfig = useNodeConfig();
   const dockerContainerConfig = useDockerContainerConfig();
+  const dmConfig = useDmConfig();
+  const db2Config = useDb2Config();
+  const greenPlumConfig = useGreenPlumConfig();
+  const openGaussConfig = useOpenGaussConfig();
+  const gBase8aConfig = useGBase8aConfig();
+  const vastBaseConfig = useVastBaseConfig();
+  const kingBaseConfig = useKingBaseConfig();
 
   const config: any = useMemo(
     () => ({
@@ -143,6 +157,13 @@ export const useMonitorConfig = () => {
       DataStorage: dataStorageConfig,
       ESXI: esxiConfig,
       VM: vmConfig,
+      DM: dmConfig,
+      DB2: db2Config,
+      GreenPlum: greenPlumConfig,
+      OpenGauss: openGaussConfig,
+      GBase8a: gBase8aConfig,
+      VastBase: vastBaseConfig,
+      KingBase: kingBaseConfig,
     }),
     []
   );
@@ -157,7 +178,14 @@ export const useMonitorConfig = () => {
   }) => {
     const objectConfig = config[data.objectName];
     const pluginCfg =
-      objectConfig?.plugins?.[data.pluginName]?.getPluginCfg(data)?.[data.mode];
+      objectConfig?.plugins?.[data.pluginName]?.getPluginCfg(data);
+    const commonConfig = {
+      collect_type: '',
+      config_type: [],
+      collector: '',
+      instance_type: '',
+      object_name: '',
+    };
     let defaultPluginCfg: any = {
       getParams: () => ({
         instance_id: '',
@@ -168,11 +196,6 @@ export const useMonitorConfig = () => {
     };
     if (data.mode === 'auto') {
       defaultPluginCfg = {
-        collect_type: '',
-        config_type: [],
-        collector: '',
-        instance_type: '',
-        object_name: '',
         formItems: null,
         initTableItems: {},
         defaultForm: {},
@@ -180,7 +203,7 @@ export const useMonitorConfig = () => {
         getParams: () => ({}),
       };
     }
-    return pluginCfg || defaultPluginCfg;
+    return pluginCfg || { ...commonConfig, ...defaultPluginCfg };
   };
 
   return {

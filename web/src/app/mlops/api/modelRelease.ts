@@ -9,7 +9,7 @@ interface LabelData {
 interface AnomalyDetectionReason {
   model_name: string;
   model_version: string;
-  algorithmn: string;
+  algorithm: string;
   data: LabelData[];
   anomaly_threshold: number;
 }
@@ -62,17 +62,17 @@ const useMlopsModelReleaseApi = () => {
 
   // 异常检测推理
   const anomalyDetectionReason = async (params: AnomalyDetectionReason) => {
-    return await post(`/mlops/anomaly_detection_train_jobs/predict/`, params);
+    return await post(`/mlops/anomaly_detection_servings/predict/`, params);
   };
 
   // 编辑能力发布
   const updateAnomalyServings = async (id: number, params: {
-    name: string;
-    description: string;
-    model_version: string;
-    anomaly_detection_train_job: string;
-    status: string;
-    anomaly_threshold: number;
+    name?: string;
+    description?: string;
+    model_version?: string;
+    anomaly_detection_train_job?: string;
+    status?: string;
+    anomaly_threshold?: number;
   }) => {
     return await patch(`/mlops/anomaly_detection_servings/${id}/`, params);
   };

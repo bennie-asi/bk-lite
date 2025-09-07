@@ -159,7 +159,7 @@ const Asset = () => {
         width: 170,
         render: (_, record) => (
           <>
-            {record.config_id
+            {record.config_ids?.length
               ? t('monitor.intergrations.automatic')
               : t('monitor.intergrations.manual')}
           </>
@@ -198,7 +198,6 @@ const Asset = () => {
         title: t('monitor.group'),
         dataIndex: 'organization',
         key: 'organization',
-        width: 160,
         render: (_, { organization }) => (
           <EllipsisWithTooltip
             className="w-full overflow-hidden text-ellipsis whitespace-nowrap"
@@ -254,7 +253,7 @@ const Asset = () => {
     return [
       ...getBaseInstanceColumn({
         objects,
-        row,
+        row: row as ObjectItem,
         t,
       }),
       ...columnItems,
@@ -597,13 +596,14 @@ const Asset = () => {
           </div>
         </div>
         <CustomTable
-          scroll={{ y: 'calc(100vh - 320px)', x: 'calc(100vh - 480px)' }}
+          scroll={{ y: 'calc(100vh - 320px)' }}
           columns={columns}
           dataSource={tableData}
           pagination={pagination}
           loading={tableLoading}
           expandable={{
             showExpandColumn: getRowxpandable(),
+            columnWidth: 36,
             expandedRowRender: (record) => (
               <CustomTable
                 scroll={{ x: 'calc(100vh - 480px)' }}

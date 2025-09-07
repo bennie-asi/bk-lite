@@ -34,6 +34,14 @@ class CollectService(object):
             "apache_info": "ApacheInfo",
             "activemq_info": "ActiveMQInfo",
             "pgsql_info": "PgsqlInfo",
+            "weblogic_info": "WebLogicInfo",
+            "keepalived_info": "KeepalivedInfo",
+            "tongweb_info": "TongWebInfo",
+            "dameng_info": "DaMengInfo",
+            "oracle_info": "OracleInfo",
+            "db2_info": "DB2Info",
+            "tidb_info": "TiDBInfo",
+            "mssql_info": "MSSQLInfo",
         }
 
     def import_plugin(self, plugin_name):

@@ -485,9 +485,17 @@ export const getK8SData = (
   return result;
 };
 
+// 展示监控示例名称
+export const showInstName = (objectItem: ObjectItem, row: TableDataItem) => {
+  const isDerivative = DERIVATIVE_OBJECTS.includes(objectItem?.name);
+  return (
+    (isDerivative ? row?.instance_id_values?.[1] : row?.instance_name) || '--'
+  );
+};
+
 // 监控实例名称处理
 export const getBaseInstanceColumn = (config: {
-  row: TableDataItem;
+  row: ObjectItem;
   objects: ObjectItem[];
   t: any;
 }) => {
@@ -500,13 +508,10 @@ export const getBaseInstanceColumn = (config: {
     {
       title: config.t('common.name'),
       dataIndex: 'instance_name',
-      width: 160,
+      width: 300,
       key: 'instance_name',
       render: (_: unknown, record: TableDataItem) => {
-        const instanceName =
-          (isDerivative
-            ? record.instance_id_values?.[1]
-            : record.instance_name) || '--';
+        const instanceName = showInstName(config.row, record);
         return (
           <EllipsisWithTooltip
             text={instanceName}
@@ -520,7 +525,7 @@ export const getBaseInstanceColumn = (config: {
     columnItems.unshift({
       title: title,
       dataIndex: 'base_instance_name',
-      width: 160,
+      width: 300,
       key: 'base_instance_name',
       render: (_: unknown, record: TableDataItem) => {
         return (

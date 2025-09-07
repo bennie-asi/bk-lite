@@ -3,8 +3,6 @@ import os
 
 from enum import Enum
 
-from tencentcloud.teo.v20220901.errorcodes import OPERATIONDENIED_ERRZONEISALREADYPAUSED
-
 
 class BaseEnum(str, Enum):
     """
@@ -74,6 +72,9 @@ ENUM = "enum"
 USER = "user"
 ORGANIZATION = "organization"
 
+# 模型内置属性：组织
+INIT_MODEL_GROUP = "group"
+
 # 默认的实例名属性
 INST_NAME_INFOS = [
     {
@@ -120,7 +121,7 @@ CREATE_MODEL_CHECK_ATTR = dict(
 UPDATE_MODEL_CHECK_ATTR_MAP = dict(
     is_only={"model_name": "模型名称"},
     is_required={"model_name": "模型名称"},
-    editable={"model_name": "模型名称", "classification_id": "模型分类ID", "icn": "图标"},
+    editable={"model_name": "模型名称", "classification_id": "模型分类ID", "icn": "图标", "group": "组织"},
 )
 
 # 需要进行类型转换的数据类型
@@ -146,6 +147,17 @@ SUBORDINATE_MODEL = "subordinate_model"
 
 # 加密的属性列表
 ENCRYPTED_KEY = {"password", "secret_key", "encryption_key"}
+
+ATTR_TYPE_MAP = {
+    "str": "字符串",
+    "int": "整数",
+    "enum": "枚举",
+    "time": "时间",
+    "user": " 用户",
+    "pwd": "密码",
+    "bool": "布尔",
+    "organization": "组织"
+}
 
 # ===================
 

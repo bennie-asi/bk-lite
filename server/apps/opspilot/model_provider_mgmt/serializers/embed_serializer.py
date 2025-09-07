@@ -1,8 +1,9 @@
+from apps.core.utils.serializers import AuthSerializer
+from apps.opspilot.model_provider_mgmt.serializers.model_type_serializer import ProviderModelTypeSerializer
 from apps.opspilot.models import EmbedProvider
-from config.drf.serializers import AuthSerializer
 
 
-class EmbedProviderSerializer(AuthSerializer):
+class EmbedProviderSerializer(AuthSerializer, ProviderModelTypeSerializer):
     permission_key = "provider.embed_model"
 
     class Meta:

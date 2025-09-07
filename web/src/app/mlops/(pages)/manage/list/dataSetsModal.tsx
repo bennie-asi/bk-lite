@@ -10,12 +10,13 @@ interface DatasetModalProps {
   user: any;
   options?: any,
   onSuccess: () => void;
+  activeTag: string[];
   [key: string]: any
 }
 
-const DatasetModal = forwardRef<ModalRef, DatasetModalProps>(({ onSuccess }, ref) => {
+const DatasetModal = forwardRef<ModalRef, DatasetModalProps>(({ onSuccess, activeTag }, ref) => {
   const { t } = useTranslation();
-  const { addAnomalyDatasets, updateAnomalyDatasets } = useMlopsManageApi();
+  const { addAnomalyDatasets, updateAnomalyDatasets, addRasaDatasets, updateRasaDatasets } = useMlopsManageApi();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [type, setType] = useState<string>('edit');
   const [title, setTitle] = useState<string>('editform');
@@ -42,19 +43,35 @@ const DatasetModal = forwardRef<ModalRef, DatasetModalProps>(({ onSuccess }, ref
         ...formData,
       })
     }
-  }, [formData, isModalOpen])
+  }, [formData, isModalOpen]);
+
+  const handleAddMap: Record<string, (params: any) => Promise<void>> = {
+    'anomaly': async (params: any) => {
+      await addAnomalyDatasets(params);
+    },
+    'rasa': async (params: any) => {
+      await addRasaDatasets(params);
+    }
+  };
+
+  const handleUpdateMap: Record<string, (id: number, params: any) => Promise<void>> = {
+    'anomaly': async (id: number, params: any) => {
+      await updateAnomalyDatasets(id, params);
+    },
+    'rasa': async (id: number, params: any) => {
+      await updateRasaDatasets(id, params);
+    }
+  };
 
   const handleSubmit = async () => {
     setConfirmLoading(true);
     try {
+      const [tagName] = activeTag;
       const { name, description } = await formRef.current?.validateFields();
       if (type === 'add') {
-        await addAnomalyDatasets({
-          name,
-          description
-        })
+        await handleAddMap[tagName]({ name, description });
       } else if (type === 'edit') {
-        await updateAnomalyDatasets(formData.id, {
+        await handleUpdateMap[tagName](formData.id, {
           name,
           description
         });
@@ -64,8 +81,7 @@ const DatasetModal = forwardRef<ModalRef, DatasetModalProps>(({ onSuccess }, ref
       onSuccess();
     } catch (e) {
       console.log(e)
-    }
-    finally {
+    } finally {
       setConfirmLoading(false);
     }
   };
